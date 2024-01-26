@@ -115,6 +115,69 @@ to connect with compromised system, i will connect with netcat utility on port 4
 
 ========================================================Completed===============================
 
+Technique 3: Port knocking (T1205)
+
+Port knocking is a security technique used to protect network services from unauthorized access or port scans. 
+It involves dynamically opening network ports on a firewall or network device in a specific sequence or pattern. 
+The idea is that the ports are initially closed, and a client must "knock" on these ports in a predefined sequence 
+before access is granted to the desired service.
+
+How port knocking generally works:
+
+Closed Ports: By default, the network ports that lead to a particular service are closed on the firewall.
+
+Port Knocking Sequence: To gain access to the service, a user or system must send a series of connection attempts (knocks) to a predefined sequence of closed ports.
+
+Firewall Rules Modification: The firewall or security device monitoring these ports detects the correct sequence of knocks.
+
+Temporary Opening of Ports: Upon detecting the correct sequence, the firewall dynamically opens the necessary ports for a limited time, allowing the client to connect to the desired service.
+
+Access Granted: The client can now access the service because the required ports are temporarily open.
+
+Ports Automatically Close: After a certain period of inactivity or a predefined timeout, the opened ports automatically close, reducing the exposure of the system to potential attacks.
+
+The primary advantages of port knocking include:
+
+Stealth: Since the ports are closed by default, the services are not easily discoverable by port scans.
+
+Enhanced Security: It adds an additional layer of security by requiring a specific sequence of port knocks, making it more difficult for attackers to guess or automate the process.
+
+Reduced Attack Surface: The services are only exposed when the correct sequence is provided, reducing the attack surface and exposure to potential threats.
+
+Procedure:
+
+In this lab, we have to figure out the port knocking pattern, perform the knock and once its successful ssh service is expose.
+
+Firstly we will check the open port on target with the help of nmap.But by default in port knocking al ports showing closed.
+In our lab, it is clear that the following ports are open on the target machine i.e 7000,8000,9000 and tcp flags are FIN and URG.
+
+Each ports need n number of packets where 4 < n < 10
+
+so, send 9 packets of TCP URG and FIN flag to each port.
+
+Command used:
+
+hping3 -c 9 -F -p 7000 target_IP [F=FIN]
+hping3 -c 9 -U -p 7000 target_IP [U=URG]
+hping3 -c 9 -F -p 8000 target_IP 
+hping3 -c 9 -U -p 8000 target_IP 
+hping3 -c 9 -F -p 9000 target_IP 
+hping3 -c 9 -U -p 9000 target_IP 
+
+In this format i have send 9 packets.Once all packets sent to target,automatically port 22 is exposed.To verify this use
+nmap -p- targetIP
+
+Once port 22 is showing open on target machine then we will ssh the target server with the steal credentials and now we are successfully
+login on target system.
+
+Now we know the pattern so in future anytime we will send packet in the specific pattern and by doing this ssh service will expose 
+and now we can login with the credentials.
+
+========================================completed==========================
+
+
+
+
 
 
 
