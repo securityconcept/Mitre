@@ -11,7 +11,9 @@ systems to schedule programs or scripts to be executed at a specified date and t
 (ex: RPC and file and printer sharing in Windows environments). Scheduling a task on a remote system typically may require being a member of an admin or otherwise privileged 
 group on the remote system.
 
-Procedure: I have done one lab of "Maintaining Access: Schtasks" in which firstly i have performed fingerprint of the target by using NMAP and i have found multiple ports are open
+Procedure: 
+
+I have done one lab of "Maintaining Access: Schtasks" in which firstly i have performed fingerprint of the target by using NMAP and i have found multiple ports are open
 including port 80 and then now i have run NMAP gain to find out the version of service running on port 80 (nmap -sV -p 80 target ip). Once command completed i have observed that
 httpFileServer 2.3 running on port 80 in target system. Now i am searching for any exploit for hfs 2.3 (searchsploit hfs) and found Rejetto HTTP File Server (HFS) 2.3 is vulnerable
 to RCE.Now first phase completed.
