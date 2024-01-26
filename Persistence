@@ -4,7 +4,7 @@ Persistence consists of techniques that adversaries use to keep access to system
 their access. Techniques used for persistence include any access, action, or configuration changes that let them maintain their foothold on systems, such as replacing or hijacking
 legitimate code or adding startup code.
 
-Techniques:
+Techniques: schedule task : create a schedule task which will run automatically when user login on the compromised system.
 
 Scheduled Task/Job : Adversaries may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code. Utilities exist within all major operating
 systems to schedule programs or scripts to be executed at a specified date and time. A task can also be scheduled on a remote system, provided the proper authentication is met
