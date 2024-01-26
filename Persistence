@@ -1,0 +1,29 @@
+Tactics: 
+
+Persistence consists of techniques that adversaries use to keep access to systems across restarts, changed credentials, and other interruptions that could cut off 
+their access. Techniques used for persistence include any access, action, or configuration changes that let them maintain their foothold on systems, such as replacing or hijacking
+legitimate code or adding startup code.
+
+Techniques:
+
+Scheduled Task/Job : Adversaries may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code. Utilities exist within all major operating
+systems to schedule programs or scripts to be executed at a specified date and time. A task can also be scheduled on a remote system, provided the proper authentication is met
+(ex: RPC and file and printer sharing in Windows environments). Scheduling a task on a remote system typically may require being a member of an admin or otherwise privileged 
+group on the remote system.
+
+Procedure: I have done one lab of "Maintaining Access: Schtasks" in which firstly i have performed fingerprint of the target by using NMAP and i have found multiple ports are open
+including port 80 and then now i have run NMAP gain to find out the version of service running on port 80 (nmap -sV -p 80 target ip). Once command completed i have observed that
+httpFileServer 2.3 running on port 80 in target system. Now i am searching for any exploit for hfs 2.3 (searchsploit hfs) and found Rejetto HTTP File Server (HFS) 2.3 is vulnerable
+to RCE.Now first phase completed.
+
+Now open metasploit framework (msfconsole -q) and load exploit (exploit/windows/http/rejetto_hfs_exec) and also checke options and set values of all required parameters and
+exploit the target.We have successfully exploit the target and get a meterpreter shell. Now 2nd phase completed.
+
+Now i am checking the current user which i got after exploitation and got to know that i am running as administrator user so now i am going to elevate to the system priviege
+to NT authrority (getsystem).After running getsystem i have elevated my privilege and now running as NT
+
+
+
+
+
+
