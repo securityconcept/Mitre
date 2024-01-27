@@ -173,6 +173,43 @@ login on target system.
 Now we know the pattern so in future anytime we will send packet in the specific pattern and by doing this ssh service will expose 
 and now we can login with the credentials.
 
+## How attackers uses Port Knocking mechanism to create persistence:
+
+Port knocking can also be exploited by attackers to create persistence on a compromised system. Here's a scenario to help illustrate how an attacker might use port knocking for persistence:
+
+Initial Compromise:
+
+The attacker gains access to a target system through a vulnerability, exploiting weak credentials, or through other means.
+
+Exploration and Reconnaissance:
+
+After gaining access, the attacker explores the system to understand its architecture, firewall rules, and services running.
+
+Identifying Port Knocking:
+
+The attacker identifies that the target system is using port knocking for security. They observe the network traffic and
+identify the specific sequence of port knocks required to open up certain ports.
+
+Creating a Backdoor:
+
+The attacker wants to maintain access to the compromised system even if the initial point of entry is discovered and closed. 
+They decide to use the port knocking mechanism for persistence.
+
+Implementing the Attack:
+
+The attacker sets up a malicious service on the compromised system that listens for the specific sequence of port knocks. 
+This service is designed to trigger the creation of a backdoor or open a hidden channel once the correct sequence is received.
+
+Initiating the Knock Sequence:
+
+To maintain access, the attacker initiates the correct sequence of port knocks from an external location. 
+This could be done using a script or a tool specifically designed for port knocking.
+
+Triggering Persistence:
+
+Once the correct knock sequence is received by the malicious service, it modifies firewall rules or opens a hidden 
+communication channel, allowing the attacker to access the system at will.
+
 ========================================completed==========================
 
 
