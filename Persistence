@@ -524,7 +524,16 @@ This is another way to create Persistence with the help of redundant access by u
 
 ======================================completed=====================================
 
+Technique 10: T1136: Create Account
 
+In this technique, attacker create an account in Postgres database and assign SUPERUSER role assign to that account.
+
+If administrator come to know about the unauthorized access on his machine and changes the password of current user but still attacker 
+maintain access on hiois machine from that account which attacker creates.
+
+In this way attackers maintained their access on victim's machine. To see the video please visit my channel "Security concepts" on youtube.
+
+===============================================completed===========================
 
 
 
